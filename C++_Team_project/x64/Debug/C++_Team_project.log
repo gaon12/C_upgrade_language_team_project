@@ -1,0 +1,3 @@
+﻿  Team_Project_Source.cpp
+C:\Users\user\Desktop\C++_Team_project\C++_Team_project\Team_Project_Source.cpp(34,1): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+  C++_Team_project.vcxproj -> C:\Users\user\Desktop\C++_Team_project\x64\Debug\C++_Team_project.exe
