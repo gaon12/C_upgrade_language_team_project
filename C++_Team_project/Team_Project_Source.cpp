@@ -1,196 +1,253 @@
-#include<iostream>
+// Team_Project_Source.cpp
+#include <iostream>
 #include <string>
-using namespace std;
+#include <vector>
+#include <limits>
+#include <algorithm>
+#include <chrono>
 
-#define NAME_SIZE 32
-#define STUDENT_MAX 10
-#define ADDRESS_SIZE 128
-#define SUBJECT_SIZE 20
+namespace ui {
 
-struct _tagStudent
+void clearLine()
 {
-    int iNumber;
-    char strName[NAME_SIZE];
-    char strSubject[SUBJECT_SIZE];
-    char strAddress[ADDRESS_SIZE];
-    int imonth;
-    int idate;
-    int iTime;
-    int iClock;
-};
+    std::cout << std::string(60, '-') << '\n';
+}
 
-enum MENU
+void pause()
 {
-    MENU_NONE,
-    MENU_INSERT,
-    MENU_DELETE,
-    MENU_SEARCH,
-    MENU_OUTPUT,
-    MENU_EXIT
-};
+    std::cout << "ê³„ì†í•˜ë ¤ë©´ Enter í‚¤ë¥¼ ëˆ„ë¥´ì„¸ìš”...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 
-
-void main()
+template <typename T>
+T input(const std::string& prompt,
+        const std::function<bool(T)>& validator = [](T) { return true; })
 {
-
-    _tagStudent tStudentArr[STUDENT_MAX] = {};
-    char strName[NAME_SIZE] = {};
-    int iStudentCount = 0;
-    int iStdNumber = 1;
-
-
-    while (true)
-    {
-
-        cout << "   --------<  ÀÚ°İÁõ ½ÃÇè ¿¹¾à ÇÁ·Î±×·¥ >--------- " << endl;
-        cout << "  |                                               |" << endl;
-        cout << "  |  1. ÀÚ°İÁõ ½ÃÇè ¿¹¾àÇÏ±â                      |" << endl;
-        cout << "  |  2. ÀÚ°İÁõ ½ÃÇè Ãë¼ÒÇÏ±â                      |" << endl;
-        cout << "  |  3. ÀÚ°İÁõ ½ÃÇè ¼öÇè»ı Å½»öÇÏ±â               |" << endl;
-        cout << "  |  4. ÀÚ°İÁõ ½ÃÇè ¼öÇè»ı Ãâ·ÂÇÏ±â               |" << endl;
-        cout << "  |  5. Á¾·áÇÏ±â                                  |" << endl;
-        cout << "   ----------------------------------------------- " << endl;
-        cout << "   ¸Ş´º¸¦ ÀÔ·ÂÇÏ¼¼¿ä :    ";
-
-
-        int iMenu;
-        cin >> iMenu;
-
-        if (cin.fail())
-        {
-            cin.clear();
-
-            continue;
-        }
-
-
-
-
-        if (iMenu == MENU_EXIT)
+    T value{};
+    while (true) {
+        std::cout << prompt;
+        if (std::cin >> value && validator(value))
             break;
 
-        switch (iMenu)
-        {
-        case MENU_INSERT:
-
-
-            cout << " ==========ÀÚ°İÁõ ½ÃÇè ¿¹¾à ÀÔ·Â ÇÏ¼¼¿ä.=============" << endl;
-
-            if (iStudentCount == STUDENT_MAX)
-                break;
-
-            cout << "ÀÌ¸§À» ÀÔ·ÂÇÏ¼¼¿ä :";
-            cin >> tStudentArr[iStudentCount].strName, NAME_SIZE;
-
-            cin.ignore(1024, '\n');
-
-            cout << "ÀÀ½Ã Á¾¸ñÀ» ÀÔ·ÂÇÏ¼¼¿ä :";
-            cin.getline(tStudentArr[iStudentCount].strSubject, SUBJECT_SIZE);
-
-            cout << "Àå¼Ò¸¦ ÀÔ·ÂÇÏ¼¼¿ä : ";
-            cin.getline(tStudentArr[iStudentCount].strAddress, ADDRESS_SIZE);
-
-            cout << "¸î¿ùÀ» ÀÔ·ÂÀ»ÇÏ¼¼¿ä : ";
-            cin >> tStudentArr[iStudentCount].imonth;
-
-            cout << "¸îÀÏÀ» ÀÔ·ÂÀ»ÇÏ¼¼¿ä : ";
-            cin >> tStudentArr[iStudentCount].idate;
-
-            cout << "½Ã°£À» ÀÔ·ÂÇÏ¼¼¿ä : ";
-            cin >> tStudentArr[iStudentCount].iTime;
-
-            cout << "¸îºĞÀ» ÀÔ·ÂÇÏ¼¼¿ä : ";
-            cin >> tStudentArr[iStudentCount].iClock;
-
-            tStudentArr[iStudentCount].iNumber = iStdNumber;
-
-            ++iStdNumber;
-            ++iStudentCount;
-
-
-
-            break;
-        case MENU_DELETE:
-
-
-
-            cout << "=======================»èÁ¦ÇÒ ¼öÇè»ı ==================" << endl;
-
-
-
-            cin.ignore(1024, '\n');
-            cout << "»èÁ¦ÇÒ ¼öÇè»ıÀ» ÀÔ·ÂÇÏ¼¼¿ä : ";
-            cin.getline(strName, NAME_SIZE);
-
-            for (int i = 0; i < iStudentCount; ++i)
-            {
-                if (strcmp(tStudentArr[i].strName, strName) == 0)
-                {
-                    for (int j = i; j < iStudentCount - 1; ++j)
-                    {
-                        tStudentArr[i] = tStudentArr[i + 1];
-                    }
-                    --iStudentCount;
-
-                    cout << "»èÁ¦°¡ ¿Ï·á µÇ¾ú½À´Ï´Ù." << endl;
-                    break;
-                }
-            }
-
-
-            break;
-        case MENU_SEARCH:
-
-
-            cout << "=======================¼öÇè»ı Å½»ö ==================" << endl;
-
-
-
-            cin.ignore(1024, '\n');
-            cout << "Å½»öÇÒ ¼öÇè»ıÀ» ÀÔ·ÂÇÏ¼¼¿ä : ";
-            cin.getline(strName, NAME_SIZE);
-
-            for (int i = 0; i < iStudentCount; ++i)
-            {
-                if (strcmp(tStudentArr[i].strName, strName) == 0)
-                {
-                    cout << tStudentArr[i].iNumber << "¹øÂ° " << endl;
-                    cout << "ÀÌ¸§ : " << tStudentArr[i].strName << endl;
-                    cout << "ÀÀ½Ã Á¾¸ñ : " << tStudentArr[i].strSubject << endl;
-                    cout << "2020³â " << tStudentArr[i].imonth << "¿ù " << tStudentArr[i].idate << "ÀÏ " << endl;
-                    cout << tStudentArr[i].iTime << "½Ã " << tStudentArr[i].iClock << "ºĞ" << endl;
-                    break;
-                }
-            }
-
-
-
-
-
-            break;
-        case MENU_OUTPUT:
-
-
-
-            cout << "=============¼öÇè»ıÃâ·Â ============" << endl;
-
-            for (int i = 0; i < iStudentCount; ++i)
-            {
-                cout << tStudentArr[i].iNumber << "¹øÂ° " << endl;
-                cout << "ÀÌ¸§ : " << tStudentArr[i].strName << endl;
-                cout << "ÀÀ½Ã Á¾¸ñ : " << tStudentArr[i].strSubject << endl;
-                cout << "2020³â " << tStudentArr[i].imonth << "¿ù " << tStudentArr[i].idate << "ÀÏ " << endl;
-                cout << tStudentArr[i].iTime << "½Ã " << tStudentArr[i].iClock << "ºĞ" << endl;
-            }
-
-
-
-            break;
-        default:
-            cout << "¸Ş´º¸¦ Àß¸ø ¼±ÅÃÇß½À´Ï´Ù. " << endl;
-            break;
-        }
-
-
+        std::cout << "ì…ë ¥ì´ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•˜ì„¸ìš”.\n";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // flush '\n'
+    return value;
+}
+
+std::string inputLine(const std::string& prompt,
+                      const std::function<bool(const std::string&)>& validator =
+                          [](const std::string&) { return true; })
+{
+    std::string value;
+    while (true) {
+        std::cout << prompt;
+        std::getline(std::cin, value);
+        if (validator(value))
+            break;
+        std::cout << "ì…ë ¥ì´ ì˜ëª»ë˜ì—ˆìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì‹œë„í•˜ì„¸ìš”.\n";
+    }
+    return value;
+}
+
+} // namespace ui
+
+struct Student {
+    int          number{};
+    std::string  name;
+    std::string  subject;
+    std::string  place;
+    int          month{};
+    int          day{};
+    int          hour{};
+    int          minute{};
+};
+
+enum class Menu {
+    None   = 0,
+    Insert = 1,
+    Delete,
+    Search,
+    Output,
+    Exit
+};
+
+class ReservationSystem {
+public:
+    void run();
+
+private:
+    // CRUD ê¸°ëŠ¥
+    void insertStudent();
+    void deleteStudent();
+    void searchStudent() const;
+    void outputStudents() const;
+
+    // ë‚´ë¶€ í—¬í¼
+    Student* findByName(const std::string& name);
+    const Student* findByName(const std::string& name) const;
+
+    // ë°ì´í„°
+    std::vector<Student> students_;
+    int nextNumber_ = 1;
+};
+
+void ReservationSystem::run()
+{
+    while (true) {
+        ui::clearLine();
+        std::cout <<
+            "     --------<  ìê²©ì¦ ì‹œí—˜ ì˜ˆì•½ í”„ë¡œê·¸ë¨ >---------\n"
+            "    |                                               |\n"
+            "    |  1. ìê²©ì¦ ì‹œí—˜ ì˜ˆì•½í•˜ê¸°                      |\n"
+            "    |  2. ìê²©ì¦ ì‹œí—˜ ì·¨ì†Œí•˜ê¸°                      |\n"
+            "    |  3. ìê²©ì¦ ì‹œí—˜ ìˆ˜í—˜ìƒ íƒìƒ‰í•˜ê¸°               |\n"
+            "    |  4. ìê²©ì¦ ì‹œí—˜ ìˆ˜í—˜ìƒ ì „ì²´ ì¶œë ¥í•˜ê¸°          |\n"
+            "    |  5. ì¢…ë£Œí•˜ê¸°                                  |\n"
+            "     -----------------------------------------------\n";
+
+        int choice = ui::input<int>("ë©”ë‰´ë¥¼ ì„ íƒí•˜ì„¸ìš”: ",
+                                    [](int v) { return v >= 1 && v <= 5; });
+
+        switch (static_cast<Menu>(choice)) {
+            case Menu::Insert:  insertStudent();  break;
+            case Menu::Delete:  deleteStudent();  break;
+            case Menu::Search:  searchStudent();  break;
+            case Menu::Output:  outputStudents(); break;
+            case Menu::Exit:    std::cout << "í”„ë¡œê·¸ë¨ì„ ì¢…ë£Œí•©ë‹ˆë‹¤.\n"; return;
+            default:            break;
+        }
+        ui::pause();
+    }
+}
+
+void ReservationSystem::insertStudent()
+{
+    ui::clearLine();
+    std::cout << "========== ìê²©ì¦ ì‹œí—˜ ì˜ˆì•½ ì…ë ¥ ==========\n";
+
+    Student s;
+    s.number  = nextNumber_++;
+    s.name    = ui::inputLine("ì´ë¦„ì„ ì…ë ¥í•˜ì„¸ìš”: ",
+                              [](const std::string& v){ return !v.empty(); });
+    s.subject = ui::inputLine("ì‘ì‹œ ì¢…ëª©ì„ ì…ë ¥í•˜ì„¸ìš”: ",
+                              [](const std::string& v){ return !v.empty(); });
+    s.place   = ui::inputLine("ì‹œí—˜ ì¥ì†Œë¥¼ ì…ë ¥í•˜ì„¸ìš”: ",
+                              [](const std::string& v){ return !v.empty(); });
+
+    s.month  = ui::input<int>("ì‹œí—˜ ì›”(1~12): ",
+                              [](int m){ return m >= 1 && m <= 12; });
+    s.day    = ui::input<int>("ì‹œí—˜ ì¼(1~31): ",
+                              [](int d){ return d >= 1 && d <= 31; });
+    s.hour   = ui::input<int>("ì‹œí—˜ ì‹œ(0~23): ",
+                              [](int h){ return h >= 0 && h <= 23; });
+    s.minute = ui::input<int>("ì‹œí—˜ ë¶„(0~59): ",
+                              [](int m){ return m >= 0 && m <= 59; });
+
+    students_.push_back(std::move(s));
+    std::cout << "ì˜ˆì•½ì´ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n";
+}
+
+void ReservationSystem::deleteStudent()
+{
+    if (students_.empty()) {
+        std::cout << "ì‚­ì œí•  ì˜ˆì•½ì´ ì—†ìŠµë‹ˆë‹¤.\n";
+        return;
+    }
+
+    ui::clearLine();
+    std::string name = ui::inputLine("ì‚­ì œí•  ìˆ˜í—˜ìƒ ì´ë¦„: ");
+
+    auto it = std::remove_if(students_.begin(), students_.end(),
+                             [&](const Student& s){ return s.name == name; });
+
+    if (it == students_.end()) {
+        std::cout << "ì¼ì¹˜í•˜ëŠ” ìˆ˜í—˜ìƒì´ ì—†ìŠµë‹ˆë‹¤.\n";
+        return;
+    }
+
+    students_.erase(it, students_.end());
+    std::cout << "ì‚­ì œê°€ ì™„ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.\n";
+}
+
+void ReservationSystem::searchStudent() const
+{
+    if (students_.empty()) {
+        std::cout << "ê²€ìƒ‰í•  ì˜ˆì•½ì´ ì—†ìŠµë‹ˆë‹¤.\n";
+        return;
+    }
+
+    ui::clearLine();
+    std::string name = ui::inputLine("ê²€ìƒ‰í•  ìˆ˜í—˜ìƒ ì´ë¦„: ");
+
+    const Student* s = findByName(name);
+    if (!s) {
+        std::cout << "ì¼ì¹˜í•˜ëŠ” ìˆ˜í—˜ìƒì´ ì—†ìŠµë‹ˆë‹¤.\n";
+        return;
+    }
+
+    int currentYear = std::chrono::year_month_day(
+        std::chrono::floor<std::chrono::days>(
+            std::chrono::system_clock::now())).year();
+
+    std::cout << s->number << "ë²ˆì§¸ ìˆ˜í—˜ìƒ\n"
+              << "ì´ë¦„       : " << s->name    << '\n'
+              << "ì‘ì‹œ ì¢…ëª©  : " << s->subject << '\n'
+              << currentYear << "ë…„ "
+              << s->month  << "ì›” "
+              << s->day    << "ì¼\n"
+              << s->hour   << "ì‹œ "
+              << s->minute << "ë¶„\n";
+}
+
+void ReservationSystem::outputStudents() const
+{
+    if (students_.empty()) {
+        std::cout << "ë“±ë¡ëœ ì˜ˆì•½ì´ ì—†ìŠµë‹ˆë‹¤.\n";
+        return;
+    }
+
+    ui::clearLine();
+    int currentYear = std::chrono::year_month_day(
+        std::chrono::floor<std::chrono::days>(
+            std::chrono::system_clock::now())).year();
+
+    for (const auto& s : students_) {
+        std::cout << s.number << "ë²ˆì§¸ ìˆ˜í—˜ìƒ\n"
+                  << "ì´ë¦„       : " << s.name    << '\n'
+                  << "ì‘ì‹œ ì¢…ëª©  : " << s.subject << '\n'
+                  << currentYear << "ë…„ "
+                  << s.month  << "ì›” "
+                  << s.day    << "ì¼\n"
+                  << s.hour   << "ì‹œ "
+                  << s.minute << "ë¶„\n";
+        ui::clearLine();
+    }
+}
+
+Student* ReservationSystem::findByName(const std::string& name)
+{
+    auto it = std::find_if(students_.begin(), students_.end(),
+                           [&](const Student& s){ return s.name == name; });
+    return it == students_.end() ? nullptr : &(*it);
+}
+
+const Student* ReservationSystem::findByName(const std::string& name) const
+{
+    auto it = std::find_if(students_.cbegin(), students_.cend(),
+                           [&](const Student& s){ return s.name == name; });
+    return it == students_.cend() ? nullptr : &(*it);
+}
+
+// ---------- í”„ë¡œê·¸ë¨ ì‹œì‘ì  ----------
+int main()
+{
+    std::ios::sync_with_stdio(false); // I/O ì„±ëŠ¥ í–¥ìƒ
+    std::cin.tie(nullptr);
+
+    ReservationSystem app;
+    app.run();
+    return 0;
 }
